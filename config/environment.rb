@@ -22,7 +22,7 @@ require 'erb'
 require 'faker' if development?
 require 'json'
 
-# require 'httparty'
+require 'httparty'
 require 'pry-byebug' if development?
 require 'hirb' if development?
 require 'dotenv'

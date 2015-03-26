@@ -19,7 +19,7 @@ gem 'rake'
 gem 'shotgun'
 
 gem 'dotenv'
-# gem 'httparty'
+gem 'httparty'
 # gem 'oauth'
 # gem 'nokogiri'
 # gem 'foreman'

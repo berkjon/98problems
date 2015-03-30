@@ -34,7 +34,7 @@ end
 def use_best_token(user)
   if !access_token_expired? #if token is NOT expired
     return user.access_token
-  elsif access_token_expired?(user) && user.refresh_token
+  elsif access_token_expired?(user) && user.refresh_token #if token expired but user has a refresh token
     return refresh_token(user) # returns new token
   else #token is expired and we don't have a refresh token
     return nil #should trigger redirect to user reauthentication

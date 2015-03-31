@@ -1,4 +1,8 @@
 ### CONTROLLER HELPERS ###
+def spotify_login_url
+  return "https://accounts.spotify.com/authorize?client_id=#{ENV['SPOTIFY_API_ID']}&response_type=code&redirect_uri=#{redirect_uri}&scope=user-read-email%20user-library-read%20user-follow-read%20user-follow-modify%20playlist-modify-public&state=#{ENV['STATE']}"
+end
+
 def redirect_uri
   return 'http://127.0.0.1:9393/oauth_callback'
 end
@@ -20,7 +24,6 @@ def fetch_user_info(oauth_tokens)
     return nil
   else
     find_or_create_user(user_info, oauth_tokens)
-    # binding.pry
   end
 end
 

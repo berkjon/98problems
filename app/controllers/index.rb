@@ -1,7 +1,15 @@
 get '/' do
-  url = "https://accounts.spotify.com/authorize?client_id=#{ENV['SPOTIFY_API_ID']}&response_type=code&redirect_uri=#{redirect_uri}&scope=user-read-email%20user-library-read%20user-follow-read%20user-follow-modify%20playlist-modify-public&state=#{ENV['STATE']}"
+  if logged_in_and_active_token?
+    user = User.find(id: session[:id])
+    erb :index, locals: {user: user}
+  else
+    redirect '/welcome'
+  end
   #full list of scopes at https://developer.spotify.com/web-api/using-scopes/
-  erb :index, locals: {url: url}
+end
+
+get '/welcome' do
+  erb :welcome
 end
 
 get '/reauthorize' do

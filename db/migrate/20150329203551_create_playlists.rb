@@ -7,3 +7,4 @@ class CreatePlaylists < ActiveRecord::Migration
     end
   end
 end
+

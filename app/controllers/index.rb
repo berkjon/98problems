@@ -1,15 +1,18 @@
 get '/' do
   if logged_in_and_active_token?
-    user = User.find(id: session[:id])
-    erb :index, locals: {user: user}
+    redirect "/users/#{current_user.id}"
   else
-    redirect '/welcome'
+    erb :index
   end
-  #full list of scopes at https://developer.spotify.com/web-api/using-scopes/
 end
 
-get '/welcome' do
-  erb :welcome
+get '/users/:user_id' do
+  if logged_in_and_active_token?
+    user = User.find(session[:id])
+    p "PARAMS: #{params}; SESSION: #{session[:id]}"
+  else
+    redirect '/'
+  end
 end
 
 get '/reauthorize' do
@@ -19,9 +22,8 @@ end
 get '/oauth_callback' do
   puts "in oauth callback"
   if params[:state] == ENV['STATE']
-    if params[:code]
+    if params[:code] #if spotify sent an authorization code
       fetch_api_token(params[:code])
-      # binding.pry
       redirect '/'
     else
       puts "OAuth Error: #{params[:error]}"
@@ -31,3 +33,7 @@ get '/oauth_callback' do
   end
 end
 
+get '/logout' do
+  logout!
+  redirect '/'
+end

@@ -1,6 +1,7 @@
 ### CONTROLLER HELPERS ###
 def spotify_login_url
   return "https://accounts.spotify.com/authorize?client_id=#{ENV['SPOTIFY_API_ID']}&response_type=code&redirect_uri=#{redirect_uri}&scope=user-read-email%20user-library-read%20user-follow-read%20user-follow-modify%20playlist-modify-public&state=#{ENV['STATE']}"
+  #full list of scopes at https://developer.spotify.com/web-api/using-scopes/
 end
 
 def redirect_uri
@@ -27,6 +28,23 @@ def fetch_user_info(oauth_tokens)
   end
 end
 
+#move to User model?
+def find_or_create_user(user_info, oauth_tokens)
+  spotify_id = user_info['id']
+  user = User.find_or_initialize_by(spotify_id: spotify_id)
+  user.access_token = oauth_tokens['access_token']
+  user.access_token_duration = oauth_tokens['expires_in']
+  user.access_token_created_at = Time.now #why is this returning an incorrect time?
+  user.refresh_token = oauth_tokens['refresh_token']
+  user.display_name = user_info['display_name']
+  user.email = user_info['email']
+  user.photo_url = user_info['images'].first['url']
+  user.profile_url = user_info['external_urls']['spotify']
+  user.save
+  session[:id] = user.id
+  return user
+end
+
 #does this belong in User model instead?
 def access_token_expired?(user)
   elapsed_time = ((Time.now - user.access_token_created_at)/60).round(2)
@@ -34,10 +52,14 @@ def access_token_expired?(user)
   return time_remaining < 0
 end
 
+def token_expired_but_have_refresh_token?(user)
+  access_token_expired?(user) && user.refresh_token
+end
+
 def use_best_token(user)
-  if !access_token_expired? #if token is NOT expired
+  if !access_token_expired?(user) #if token is NOT expired
     return user.access_token
-  elsif access_token_expired?(user) && user.refresh_token #if token expired but user has a refresh token
+  elsif token_expired_but_have_refresh_token?(user)
     return refresh_token(user) # returns new token
   else #token is expired and we don't have a refresh token
     return nil #should trigger redirect to user reauthentication
@@ -63,31 +85,32 @@ def refresh_token(user)
   end
 end
 
-#move to User model?
-def find_or_create_user(user_info, oauth_tokens)
-  spotify_id = user_info['id']
-  user = User.find_or_initialize_by(spotify_id: spotify_id)
-  user.access_token = oauth_tokens['access_token']
-  user.access_token_duration = oauth_tokens['expires_in']
-  user.access_token_created_at = Time.now #why is this returning an incorrect time?
-  user.refresh_token = oauth_tokens['refresh_token']
-  user.display_name = user_info['display_name']
-  user.email = user_info['email']
-  user.photo_url = user_info['images'].first['url']
-  user.profile_url = user_info['external_urls']['spotify']
-  user.save
-  session[:user_id] = user.id
-  return user
+def current_user
+  @current_user ||= User.find(session[:id]) if session[:id]
 end
 
-def current_user
-  @current_user ||= User.find(session[:user_id]) if session[:user_id]
+def logged_in_and_active_token?
+  if !current_user.nil? #if there is a user_id in sessions
+    if !access_token_expired?(current_user) #if access token is still valid
+      return true
+    elsif token_expired_but_have_refresh_token?(current_user)
+      refresh_token(current_user)
+      return true
+    else
+      return false
+    end
+    return false
+  end
 end
 
 def logged_in?
   !current_user.nil?
 end
 
-def logout
+def logout!
+  current_user.access_token = nil
+  current_user.access_token_duration = nil
+  current_user.access_token_created_at = nil
+  current_user.refresh_token = nil
   session.clear
 end

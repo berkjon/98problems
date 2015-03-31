@@ -1,10 +1,8 @@
 class User < ActiveRecord::Base
   has_many :user_tracks
+  has_many :playlists
+  has_many :tags
   has_many :tracks, through: :user_tracks
-  has_many :playlist_usertracks, through: :user_tracks
-  has_many :playlists, through: :playlist_usertracks
-  has_many :tag_usertracks, through: :user_tracks
-  has_many :tags, through: :tag_usertracks
 
   # after_create :create_library_playlist
 

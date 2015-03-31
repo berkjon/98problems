@@ -3,8 +3,8 @@ class Track < ActiveRecord::Base
   has_many :users, through: :user_tracks
   has_many :playlist_usertracks, through: :user_tracks
   has_many :playlists, through: :playlist_usertracks
-  has_many :tag_usertracks, through: :user_tracks
-  has_many :tags, through: :tag_usertracks
+  # has_many :tag_usertracks, through: :user_tracks
+  # has_many :tags, through: :tag_usertracks
 
   # after_commit :add_to_library, on: :create #must be after_commit in order to pull user_id
 

@@ -32,6 +32,16 @@ get '/oauth_callback' do
   end
 end
 
+post '/users/:user_id/tracks/:track_id/tags/add' do
+  params[:tag][0] == "#" ? tag_string = params[:tag][1..-1].downcase : tag_string = params[:tag].downcase #move to controller helper method?
+  current_tag = current_user.tags.find_or_create_by(name: tag_string)
+  current_tag.link_to_usertrack(current_user.id, params[:track_id])
+  redirect "/users/#{params[:user_id]}"
+end
+
+
+
+
 get '/clear_session' do
   session.clear
   redirect '/'

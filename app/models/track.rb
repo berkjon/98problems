@@ -6,6 +6,13 @@ class Track < ActiveRecord::Base
   # has_many :tag_usertracks, through: :user_tracks
   # has_many :tags, through: :tag_usertracks
 
+  def tags(user_id) #returns all tags associated with a given usertrack
+    current_usertrack = UserTrack.where(user_id: user_id, track_id: self.id).first
+    current_usertrack.tags
+  end
+
+
+
   # after_commit :add_to_library, on: :create #must be after_commit in order to pull user_id
 
   # def add_to_library #when a track is added to a user's playlist, automatically add it to their Library too

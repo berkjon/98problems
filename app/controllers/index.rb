@@ -8,16 +8,15 @@ end
 
 get '/users/:user_id' do
   if logged_in_and_active_token?
-    user = User.find(session[:id])
-    p "PARAMS: #{params}; SESSION: #{session[:id]}"
+    erb :user
   else
     redirect '/'
   end
 end
 
-get '/reauthorize' do
-  erb :reauthorize #reauthenticate user with Spotify if token timed out
-end
+# get '/reauthorize' do
+#   erb :reauthorize #reauthenticate user with Spotify if token timed out
+# end
 
 get '/oauth_callback' do
   puts "in oauth callback"
@@ -31,6 +30,11 @@ get '/oauth_callback' do
   else
     halt 403, "Unauthorized - state mismatch"
   end
+end
+
+get '/clear_session' do
+  session.clear
+  redirect '/'
 end
 
 get '/logout' do

@@ -30,17 +30,22 @@ end
 
 #move to User model?
 def find_or_create_user(user_info, oauth_tokens)
-  spotify_id = user_info['id']
-  user = User.find_or_initialize_by(spotify_id: spotify_id)
-  user.access_token = oauth_tokens['access_token']
-  user.access_token_duration = oauth_tokens['expires_in']
-  user.access_token_created_at = Time.now #why is this returning an incorrect time?
-  user.refresh_token = oauth_tokens['refresh_token']
-  user.display_name = user_info['display_name']
-  user.email = user_info['email']
-  user.photo_url = user_info['images'].first['url']
-  user.profile_url = user_info['external_urls']['spotify']
-  user.save
+  user = User.where(spotify_id: user_info['id']).first
+  if user.nil?
+    user = User.create(
+      spotify_id: user_info['id'],
+      access_token: oauth_tokens['access_token'],
+      access_token_duration: oauth_tokens['expires_in'],
+      access_token_created_at: Time.now, #why is this returning an incorrect time?
+      refresh_token: oauth_tokens['refresh_token'],
+      display_name: user_info['display_name'],
+      email: user_info['email'],
+      photo_url: user_info['images'].first['url'],
+      profile_url: user_info['external_urls']['spotify'],
+    )
+    session[:id] = user.id
+    fetch_saved_tracks #load saved tracks into DB if first-time user
+  end
   session[:id] = user.id
   return user
 end

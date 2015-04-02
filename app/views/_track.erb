@@ -8,9 +8,8 @@
   <td>
     <form data-user-id="<%= current_user.id %>" data-track-id="<%= track.id %>" class="form-inline" action="/users/<%= current_user.id %>/tracks/<%= track.id %>/tags/add" method="post">
       <div class="form-group">
-        <input type="text" class="form-control input-sm" name="tag" placeholder="Enter tag here">
+        <input type="text" class="form-control input-sm" name="tag" placeholder="Enter tag here" required>
       </div>
-      <button type="submit" class="btn btn-default btn-xs add-tag">Add tag</button>
     </form>
   </td>
 </tr>

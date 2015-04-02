@@ -16,7 +16,8 @@ function addTag(event){
   // var user_id = $(this).parent().data('userId') // BETTER TO USE 'THIS' OR 'EVENT' TO PULL DATA?
   // var track_id = $(this).parent().data('trackId')
   var input_value = event.target.querySelector('[name="tag"]').value
-  var tag_element = event.target.parentElement.parentElement.getElementsByClassName('tags')
+  var tag_element = event.target.parentElement.parentElement.querySelector('td.tags')
+  debugger;
   appendTag(input_value, tag_element);
   event.target.reset();
   $.ajax({

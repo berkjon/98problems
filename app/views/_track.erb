@@ -3,7 +3,8 @@
   <td><%= track.artist %></td>
   <td><%= track.album %></td>
   <td class="tags"><% track.tags(current_user.id).each do |tag| %>
-    <span><%= tag.name %>,</span>
+    <button type="button" class="tag"><div class="remove-tag">&#10006</div><%= tag.name %></button>
+
   <% end %></td>
   <td>
     <form data-user-id="<%= current_user.id %>" data-track-id="<%= track.id %>" class="form-inline" action="/users/<%= current_user.id %>/tracks/<%= track.id %>/tags/add" method="post">

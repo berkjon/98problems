@@ -3,3 +3,53 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+button.tag{
+  padding: 1px 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 7px;
+  background-color: #000;
+  margin-bottom: 2px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  color: #2ebd59;
+  font-weight: bold;
+  position: relative;
+}
+
+button.tag:hover, button.tag:focus, button.tag:active{
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #2EBD59;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button.tag:hover .remove-tag{
+  /*background-color: black;*/
+  display: inline-block;
+}
+
+.remove-tag{
+  display: none;
+  position: absolute;
+  top: -6px;
+  left: -8px;
+  border-radius: 8px;
+  line-height: 1;
+  border: 1px solid gray;
+  background-color: inherit;
+  padding: 0px 2px;
+  color: #820000;
+}
+
+button.tag:hover .remove-tag:hover{
+  background-color: inherit;
+  padding: 1px 3px;
+  border: 1px solid #000;
+  color: red;
+};

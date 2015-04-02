@@ -30,7 +30,7 @@ button.tag:hover, button.tag:focus, button.tag:active{
 }
 
 button.tag:hover .remove-tag{
-  /*background-color: black;*/
+  background-color: #e6e6e6;
   display: inline-block;
 }
 
@@ -48,8 +48,8 @@ button.tag:hover .remove-tag{
 }
 
 button.tag:hover .remove-tag:hover{
-  background-color: inherit;
+  background-color: #e6e6e6;
   padding: 1px 3px;
-  border: 1px solid #000;
+  border: 1px solid darkgray;
   color: red;
 };

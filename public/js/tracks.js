@@ -5,7 +5,7 @@ $(document).ready(function() {
 function bindEvents(){
   // $('button.add-tag').on('click', addTag);
   $('form.add-tag-form').submit(addTag);
-  $('form.remove-tag-form').submit(removeTag);
+  $('table').on('submit', 'form.remove-tag-form', removeTagFromTrack);
   // get rid of clicks and just do based on 'enter' instead
   // add functionality for deleting tags
 }
@@ -34,7 +34,7 @@ function addTag(event){
   });
 }
 
-function removeTag(event){
+function removeTagFromTrack(event){
   event.preventDefault();
   var user_id = $(event.target).parents().eq(2).data('userId')
   var track_id = $(event.target).parents().eq(2).data('trackId')

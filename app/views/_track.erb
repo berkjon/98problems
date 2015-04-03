@@ -3,7 +3,7 @@
   <td><%= track.artist %></td>
   <td><%= track.album %></td>
   <td class="tags"><% track.tags(current_user.id).each do |tag| %>
-    <%= erb :_tag, locals: {current_user: current_user, track: track, tag: tag}, layout: false %>
+    <%= erb :_tag_on_track, locals: {current_user: current_user, track: track, tag: tag}, layout: false %>
   <% end %></td>
   <td>
     <form class="add-tag-form" class="form-inline" action="/users/<%= current_user.id %>/tracks/<%= track.id %>/tags/add" method="post">

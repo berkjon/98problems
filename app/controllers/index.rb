@@ -14,10 +14,6 @@ get '/users/:user_id' do
   end
 end
 
-# get '/reauthorize' do
-#   erb :reauthorize #reauthenticate user with Spotify if token timed out
-# end
-
 get '/oauth_callback' do
   puts "in oauth callback"
   if params[:state] == ENV['STATE']
@@ -32,15 +28,20 @@ get '/oauth_callback' do
   end
 end
 
+delete '/users/:user_id/tags/:tag_id/delete' do
+  Tag.find(params[:tag_id]).destroy_tag_everywhere
+  redirect "/users/#{params[:user_id]}" unless request.xhr?
+end
+
 post '/users/:user_id/tracks/:track_id/tags/add' do
   params[:tag][0] == "#" ? tag_string = params[:tag][1..-1].downcase : tag_string = params[:tag].downcase #move to controller helper method?
   current_tag = current_user.tags.find_or_create_by(name: tag_string)
-  current_tag.link_to_usertrack(current_user.id, params[:track_id])
+  current_tag.link_to_usertrack(params[:track_id])
 
   if request.xhr?
     content_type :json
     {user_id: params[:user_id], track_id: params[:track_id], tag_id: current_tag.id}.to_json
-    # erb :_tag, locals: {tag: tag}, layout: false
+    # erb :_tag_on_track, locals: {tag: tag}, layout: false
   else
     redirect "/users/#{params[:user_id]}"
   end

@@ -40,7 +40,7 @@ post '/users/:user_id/tracks/:track_id/tags/add' do
 
   if request.xhr?
     content_type :json
-    {user_id: params[:user_id], track_id: params[:track_id], tag_id: current_tag.id}.to_json
+    {user_id: params[:user_id], track_id: params[:track_id], tag_id: current_tag.id, tag_string: tag_string}.to_json
     # erb :_tag_on_track, locals: {tag: tag}, layout: false
   else
     redirect "/users/#{params[:user_id]}"

@@ -45,6 +45,12 @@ def find_or_create_user(user_info, oauth_tokens)
     )
     session[:id] = user.id
     fetch_saved_tracks #load saved tracks into DB if first-time user
+  else #if previous user but no token
+    user.access_token = oauth_tokens['access_token']
+    user.access_token_duration = oauth_tokens['expires_in']
+    user.access_token_created_at = Time.now
+    user.refresh_token = oauth_tokens['refresh_token']
+    user.save
   end
   session[:id] = user.id
   return user
@@ -52,9 +58,13 @@ end
 
 #does this belong in User model instead?
 def access_token_expired?(user)
-  elapsed_time = ((Time.now - user.access_token_created_at)/60).round(2)
-  time_remaining = user.access_token_duration - elapsed_time
-  return time_remaining < 0
+  if user.access_token_created_at.nil?
+    return true
+  else
+    elapsed_time = ((Time.now - user.access_token_created_at)/60).round(2)
+    time_remaining = user.access_token_duration - elapsed_time
+    return time_remaining < 0
+  end
 end
 
 def token_expired_but_have_refresh_token?(user)
@@ -117,5 +127,6 @@ def logout!
   current_user.access_token_duration = nil
   current_user.access_token_created_at = nil
   current_user.refresh_token = nil
+  current_user.save
   session.clear
 end

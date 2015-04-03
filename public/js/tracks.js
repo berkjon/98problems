@@ -8,6 +8,7 @@ function bindEvents(){
   $('div.user-tags').on('submit', 'form.remove-tag-form', removeTagFromUser);
   $('div.user-tags').on('click', 'button.user-tag', addSelectedClass);
   $('div.row').on('click', 'div.tag-filter-button', filterTracksBySelectedTags);
+  $('div.row').on('click', 'div.tag-export-button', exportTracksToSpotifyPlaylist);
 }
 
 function addTag(event){
@@ -96,9 +97,10 @@ function addSelectedClass(event){
 
 
 
-// FILTERING LOGIC \\
+// FILTERING TRACKS \\
 function filterTracksBySelectedTags(event){
   event.preventDefault();
+  event.stopPropagation();
   var selectedElements = $('div.user-tags').find('.selected').children();
   var userId = selectedElements.attr('data-user-id');
   var tagIds = selectedElements.map(function(){return $(this).attr('data-tag-id');});
@@ -119,4 +121,43 @@ function filterTracksBySelectedTags(event){
   }).fail(function(){
     alert("Failed to filter and re-output tags")
   });
+}
+
+// EXPORTING TO SPOTIFY \\
+  // var hitExportAjax = false
+function exportTracksToSpotifyPlaylist(event){
+  console.log('export tracks function hit')
+  event.preventDefault();
+  event.stopPropagation();
+  var selectedElements = $('div.user-tags').find('.selected').children();
+  var userId = selectedElements.attr('data-user-id');
+  var tagIds = selectedElements.map(function(){return $(this).attr('data-tag-id');});
+  // WHY IS ALL THE BELOW NECESSARY?  CAUSES ERROR OTHERWISE
+  var x = [];
+  for (var n=0;n<tagIds.length;n++){
+    x.push(tagIds[n])
+  }
+  var tagIdsString = JSON.stringify(x);
+
+  //now do for track ids
+  var trackIds = $('tr.track').map(function(){return $(this).attr('data-track-id')})
+  var y = [];
+  for (var n=0;n<trackIds.length;n++){
+    y.push(trackIds[n])
+  }
+  var trackIdsString = JSON.stringify(y);
+
+
+    $.ajax({
+      type: 'post',
+      url: "/users/"+userId+"/export_to_spotify",
+      data: {tag_ids: tagIdsString, track_ids: trackIdsString},
+    }).done(function(response){
+      debugger;
+      console.log("SUCCESS!  Created new Spotify Playlist")
+      // hitExportAjax = false
+    }).fail(function(){
+      alert("Failed to filter and re-output tags")
+    });
+  // }
 }

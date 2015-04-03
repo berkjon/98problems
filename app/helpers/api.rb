@@ -36,4 +36,34 @@ helpers do
     UserTrack.find_or_create_by(user_id: current_user.id, track_id: track.id)
   end
 
+  ### CREATE NEW PLAYLIST ###
+  def create_spotify_playlist(tag_ids)
+    track_names = []
+    tag_ids.each do |tag_id|
+      track_names << Tag.find(tag_id).name
+    end
+    new_playlist_name = track_names.join('-').insert(0, '#-')
+
+    api_source_url = "https://api.spotify.com/v1/users/#{current_user.spotify_id}/playlists"
+    playlist_name_json = {name: new_playlist_name}.to_json
+
+    response = HTTParty.post("#{api_source_url}", headers: {"Authorization" => "Bearer #{current_user.access_token}", "Content-Type" => "application/json"}, body: playlist_name_json)
+
+    return playlist_id = response['id']
+  end
+
+  def add_songs_to_playlist(playlist_id, track_ids)
+    #add logic to check if song is already on playlist and not duplicate it
+    track_spotify_ids = []
+    track_ids.each do |track_id|
+      track_spotify_ids << Track.find(track_id).spotify_id.insert(0, 'spotify:track:')
+    end
+
+    api_source_url = "https://api.spotify.com/v1/users/#{current_user.spotify_id}/playlists/#{playlist_id}/tracks"
+    playlist_tracks_to_append = {'uris' => track_spotify_ids}.to_json
+
+
+    response = HTTParty.post("#{api_source_url}", headers: {"Authorization" => "Bearer #{current_user.access_token}", "Content-Type" => "application/json"}, body: playlist_tracks_to_append)
+  end
+
 end

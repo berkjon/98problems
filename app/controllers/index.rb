@@ -7,6 +7,7 @@ get '/' do
 end
 
 get '/users/:user_id' do
+  puts "attempt /users/user_id route"
   if logged_in_and_active_token?
     erb :user
   else
@@ -60,7 +61,14 @@ end
 get '/users/:user_id/filter' do
   tag_ids = JSON.parse(params[:tag_ids])
   erb :_selected_tracks, locals: {tag_ids: tag_ids}, layout: false
-  # binding.pry
+end
+
+post '/users/:user_id/export_to_spotify' do
+  puts "HIT EXPORT ROUTE"
+  tag_ids = JSON.parse(params[:tag_ids])
+  track_ids = JSON.parse(params[:track_ids])
+  playlist_id = create_spotify_playlist(tag_ids)
+  add_songs_to_playlist(playlist_id, track_ids)
 end
 
 

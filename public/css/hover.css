@@ -3565,8 +3565,8 @@
   padding-right: 2.2em;
 }
 .hvr-icon-float-away:before, .hvr-icon-float-away:after {
-  content: "\f055";
-  position: absolute;
+  content: "\f08e";
+  /*position: absolute;*/
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;
@@ -4521,8 +4521,8 @@
   transition-duration: 0.3s;
 }
 .hvr-icon-wobble-vertical:before {
-  content: "\f062";
-  position: absolute;
+  content: "\f08e";
+  /*position: absolute;*/
   right: 1em;
   padding: 0 1px;
   font-family: FontAwesome;

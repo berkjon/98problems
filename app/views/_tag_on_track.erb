@@ -1,4 +1,4 @@
-    <button type="button" class="tag">
+    <button class="tag track-tag">
       <form data-tag-id="<%= tag.id %>" class="remove-tag-form" action="/users/<%= current_user.id %>/tracks/<%= track.id %>/tags/<%= tag.id %>/remove" method="post">
         <input name="_method" type="hidden" value="delete">
         <input type="submit" value="&#10006" class="remove-tag">

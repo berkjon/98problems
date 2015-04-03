@@ -34,10 +34,14 @@ delete '/users/:user_id/tags/:tag_id/delete' do
 end
 
 post '/users/:user_id/tracks/:track_id/tags/add' do
-  params[:tag][0] == "#" ? tag_string = params[:tag][1..-1].downcase : tag_string = params[:tag].downcase #move to controller helper method?
+  if request.xhr? #because JS file already removes leading '#' sign and converts to lowercase
+    tag_string = params[:tag]
+  else
+    #move this to controller helper method?
+    params[:tag][0] == "#" ? tag_string = params[:tag][1..-1].downcase : tag_string = params[:tag].downcase
+  end
   current_tag = current_user.tags.find_or_create_by(name: tag_string)
   current_tag.link_to_usertrack(params[:track_id])
-
   if request.xhr?
     content_type :json
     {user_id: params[:user_id], track_id: params[:track_id], tag_id: current_tag.id, tag_string: tag_string}.to_json

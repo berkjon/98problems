@@ -4,13 +4,9 @@
   box-sizing: border-box;
 }
 
-button.tag{
-  padding: 1px 3px;
-  font-size: 12px;
+.tag{
   line-height: 1.5;
-  border-radius: 7px;
   background-color: #000;
-  margin-bottom: 2px;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -19,9 +15,30 @@ button.tag{
   color: #2ebd59;
   font-weight: bold;
   position: relative;
+  outline: 0;
 }
 
-button.tag:hover, button.tag:focus, button.tag:active{
+.user-tag{
+  padding: 1px 6px;
+  font-size: 15px;
+  border-radius: 11px;
+  margin-bottom: 4px;
+}
+
+.selected{
+  border: 1px solid gray;
+  background-color: #00ff4d;
+  color: #000;
+}
+
+.track-tag{
+  padding: 1px 3px;
+  font-size: 12px;
+  border-radius: 7px;
+  margin-bottom: 2px;
+}
+
+.tag:hover, .tag:focus, .tag:active{
   color: #333;
   background-color: #e6e6e6;
   border-color: #2EBD59;
@@ -29,12 +46,13 @@ button.tag:hover, button.tag:focus, button.tag:active{
   display: inline-block;
 }
 
-button.tag:hover .remove-tag{
+.tag:hover .remove-tag{
   background-color: #e6e6e6;
   display: inline-block;
 }
 
 .remove-tag{
+  font-size: 12px;
   display: none;
   position: absolute;
   top: -6px;
@@ -47,9 +65,28 @@ button.tag:hover .remove-tag{
   color: #820000;
 }
 
-button.tag:hover .remove-tag:hover{
+.tag:hover .remove-tag:hover{
   background-color: #e6e6e6;
   padding: 1px 3px;
   border: 1px solid darkgray;
   color: red;
 };
+
+div.flex-wrapper{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: flex-start;
+}
+
+div.user-tags{
+  flex-grow: 2;
+}
+
+div.tag-filter-button{
+ flex-grow: 1;
+ font-size: 90px;
+ min-width: 200px;
+ text-align: right;
+}

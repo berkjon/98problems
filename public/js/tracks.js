@@ -6,13 +6,15 @@ function bindEvents(){
   $('form.add-tag-form').submit(addTag);
   $('table').on('submit', 'form.remove-tag-form', removeTagFromTrack);
   $('div.user-tags').on('submit', 'form.remove-tag-form', removeTagFromUser);
+  $('div.user-tags').on('click', 'button.user-tag', addSelectedClass);
 }
 
 function addTag(event){
   event.preventDefault();
   var user_id = event.target.parentElement.parentElement.dataset.userId
   var track_id = event.target.parentElement.parentElement.dataset.trackId
-  var newTagString = event.target.querySelector('[name="tag"]').value
+  var newTagString = event.target.querySelector('[name="tag"]').value.toLowerCase()
+  if(newTagString[0] === '#'){newTagString = newTagString.substr(1, newTagString.length)}
   var tag_element = event.target.parentElement.parentElement.querySelector('td.tags')
   $(tag_element).append(formatNewTrackTag(newTagString))
   event.target.reset();
@@ -48,7 +50,6 @@ function removeTagFromTrack(event){
 };
 
 function removeTagFromUser(event){
-  debugger;
   event.preventDefault();
   var user_id = $(event.target).data('userId')
   var tag_id = $(event.target).data('tagId')
@@ -87,4 +88,8 @@ function addTagToUserIfNewTag(response){
   if ($('div.user-tags').find("[data-tag-id="+response.tag_id+"]").parent().length === 0) {
     $('div.user-tags').append(formatNewUserTag(response))
   }
+}
+
+function addSelectedClass(event){
+  $(event.target).toggleClass('selected')
 }

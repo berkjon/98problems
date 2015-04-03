@@ -81,12 +81,20 @@ div.flex-wrapper{
 }
 
 div.user-tags{
-  flex-grow: 2;
+  padding-top: 15px;
 }
 
 div.tag-filter-button{
- flex-grow: 1;
- font-size: 90px;
- min-width: 200px;
- text-align: right;
+ line-height: 1;
+ max-width: 115px; /*HOW TO POSITION THIS BETTER?*/
 }
+
+div.tag-filter-button:hover{
+  font-weight: bold;
+}
+
+div.supersize-text{
+  font-size: 90px;
+  max-width: 40px;
+}
+

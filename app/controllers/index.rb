@@ -57,6 +57,12 @@ delete '/users/:user_id/tracks/:track_id/tags/:tag_id/remove' do
   redirect "/users/#{params[:user_id]}" unless request.xhr?
 end
 
+get '/users/:user_id/filter' do
+  tag_ids = JSON.parse(params[:tag_ids])
+  erb :_selected_tracks, locals: {tag_ids: tag_ids}, layout: false
+  # binding.pry
+end
+
 
 get '/clear_session' do
   session.clear

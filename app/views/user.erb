@@ -9,16 +9,22 @@
       <h1 class="page-header">Dashboard</h1>
 
       <h2 class="sub-header">All Tags</h2>
-      <div class="flex-wrapper">
-        <div class="user-tags">
-          <% current_user.tags.each do |tag| %>
-            <%= erb :_tag_on_user, locals: {current_user: current_user, tag: tag} %>
-          <% end %>
+        <div class="row placeholders">
+          <div class="col-xs-9 col-sm-9 placeholder">
+            <div class="user-tags">
+              <% current_user.tags.each do |tag| %>
+                <%= erb :_tag_on_user, locals: {current_user: current_user, tag: tag} %>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-2 placeholder circle-border">
+            <div class="tag-filter-button">
+              <div class="supersize-text hvr-icon-fade">
+              </div>
+              <span class="text-muted">Click to Filter</span>
+            </div>
+          </div>
         </div>
-        <div class="tag-filter-button">
-          #<i class="fa fa-filter"></i>
-        </div>
-      </div>
 
 
       <h2 class="sub-header">Tracks</h2>

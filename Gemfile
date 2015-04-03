@@ -20,6 +20,7 @@ gem 'shotgun'
 
 gem 'dotenv'
 gem 'httparty'
+gem 'json'
 # gem 'oauth'
 # gem 'nokogiri'
 # gem 'foreman'

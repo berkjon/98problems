@@ -7,6 +7,7 @@ function bindEvents(){
   $('table').on('submit', 'form.remove-tag-form', removeTagFromTrack);
   $('div.user-tags').on('submit', 'form.remove-tag-form', removeTagFromUser);
   $('div.user-tags').on('click', 'button.user-tag', addSelectedClass);
+  $('div.row').on('click', 'div.tag-filter-button', filterTracksBySelectedTags);
 }
 
 function addTag(event){
@@ -54,7 +55,6 @@ function removeTagFromUser(event){
   var user_id = $(event.target).data('userId')
   var tag_id = $(event.target).data('tagId')
   $(event.target).parent().remove();
-  // BELOW FUNCTION DOES NOT REMOVE TAGS THAT WERE JUST ADDED; NEED TO FIX.  EVENT DELEGATION/HANDLING ISSUE.
   $('table').find("[data-tag-id="+tag_id+"]").parent().remove() // remove all other tags on page
 
   $.ajax({
@@ -70,11 +70,11 @@ function removeTagFromUser(event){
 }
 
 function formatNewTrackTag(newTagString){
-  return "<button type='button' class='tag'><form data-tag-id='_TAG_ID_' class='remove-tag-form' action='/users/_USER_ID_/tracks/_TRACK_ID_/tags/_TAG_ID_/remove' method='post'><input name='_method' type='hidden' value='delete'><input type='submit' value='&#10006' class='remove-tag'>"+newTagString+"</form></button>"
+  return "<button type='button' class='tag track-tag'><form data-tag-id='_TAG_ID_' class='remove-tag-form' action='/users/_USER_ID_/tracks/_TRACK_ID_/tags/_TAG_ID_/remove' method='post'><input name='_method' type='hidden' value='delete'><input type='submit' value='&#10006' class='remove-tag'>"+newTagString+"</form></button>"
 };
 
 function formatNewUserTag(response){
-  return "<button type='button' class='tag'><form data-tag-id="+response.tag_id+" data-user-id="+response.user_id+" class='remove-tag-form' action='/users/"+response.user_id+"/tags/"+response.tag_id+"/delete' method='post'><input name='_method' type='hidden' value='delete'><input type='submit' value='&#10006' class='remove-tag'>"+response.tag_string+"</form></button>"
+  return "<button type='button' class='tag user-tag'><form data-tag-id="+response.tag_id+" data-user-id="+response.user_id+" class='remove-tag-form' action='/users/"+response.user_id+"/tags/"+response.tag_id+"/delete' method='post'><input name='_method' type='hidden' value='delete'><input type='submit' value='&#10006' class='remove-tag'>"+response.tag_string+"</form></button>"
 };
 
 function updateTrackTagHiddenFields(response){
@@ -92,4 +92,31 @@ function addTagToUserIfNewTag(response){
 
 function addSelectedClass(event){
   $(event.target).toggleClass('selected')
+}
+
+
+
+// FILTERING LOGIC \\
+function filterTracksBySelectedTags(event){
+  event.preventDefault();
+  var selectedElements = $('div.user-tags').find('.selected').children();
+  var userId = selectedElements.attr('data-user-id');
+  var tagIds = selectedElements.map(function(){return $(this).attr('data-tag-id');});
+  // WHY IS ALL THE BELOW NECESSARY?  CAUSES ERROR OTHERWISE
+  var x = [];
+  for (var n=0;n<tagIds.length;n++){
+    x.push(tagIds[n])
+  }
+  var tagIdsString = JSON.stringify(x);
+  // debugger;
+  $.ajax({
+    type: 'get',
+    url: "/users/"+userId+"/filter",
+    data: {tag_ids: tagIdsString},
+  }).done(function(response){
+    $('tbody').empty();
+    $('tbody').prepend(response);
+  }).fail(function(){
+    alert("Failed to filter and re-output tags")
+  });
 }

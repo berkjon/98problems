@@ -64,6 +64,7 @@ helpers do
 
 
     response = HTTParty.post("#{api_source_url}", headers: {"Authorization" => "Bearer #{current_user.access_token}", "Content-Type" => "application/json"}, body: playlist_tracks_to_append)
+    puts "Creating playlist response: #{response}"
   end
 
 end

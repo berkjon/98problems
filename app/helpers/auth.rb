@@ -93,6 +93,7 @@ def refresh_token(user)
     user.access_token_duration = new_token['expires_in']
     user.access_token_created_at = Time.now
     user.refresh_token = new_token['refresh_token'] #will set to nil if no new refresh token received
+    # user.save!
     return new_token['access_token']
   else
     puts "Error refreshing token: #{new_token['error']}"

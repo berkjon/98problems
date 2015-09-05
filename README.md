@@ -1,15 +1,16 @@
 ![Landing Page](https://raw.githubusercontent.com/berkjon/98problems/master/public/img/screenshots/01_landing_page.png "Landing Page")
 
-> Watch the [Product Demo Video](https://www.youtube.com/watch?v=y08LVBlg7a8 "Product Demo") on YouTube
+> *Watch the [Product Demo Video](https://www.youtube.com/watch?v=y08LVBlg7a8 "Product Demo") on YouTube*
 
 \#98Problems is a tool to organize music on Spotify using tags instead of traditional playlists.  After importing their Spotify library and tagging tracks with various characteristics, users can filter their collection and generate on-the-fly playlists containing only songs matching a particular set of attributes (e.g. "workout', "mashup", instrumental").  Playlists are instantly exported to Spotify for easy listening on the go.
 
 This was a solo project built in one week at Dev Bootcamp.
 
 ## Screen Grabs
-#### 1) Adding Tags to Tracks Page
+#### 1) Adding Tags to Tracks
 * After authenticating via Spotify and importing their music library, users go through a one-time setup process to add tags to all their tracks
 * In a future release, I plan to offer the ability to automatically add tags based on the name of any Spotify playlists the user already has a track in
+
 ![Adding Tags to Tracks](https://raw.githubusercontent.com/berkjon/98problems/master/public/img/screenshots/02_adding_tags.png "Adding Tags to Tracks")
 
 #### 2) Filtering
@@ -25,7 +26,7 @@ This was a solo project built in one week at Dev Bootcamp.
 ![Exporting to Spotify](https://raw.githubusercontent.com/berkjon/98problems/master/public/img/screenshots/04_exported_playlist.png "Exporting to Spotify")
 
 #### 4) Side by Side Comparison
-* Newly created Spotify playlist (right) contains the same tracks as the filtered list on #98Problems (left)
+* Filtered list on #98Problems (left) contains the same tracks as the newly created Spotify playlist (right)
 
 ![Side by Side Comparison](https://raw.githubusercontent.com/berkjon/98problems/master/public/img/screenshots/05_side_by_side.png "Side by Side Comparison")
 
@@ -39,5 +40,6 @@ This was a solo project built in one week at Dev Bootcamp.
 * Spotify API & OAuth 2.0
 
 ##### Database Schema:
+
 ![Database Schema](https://raw.githubusercontent.com/berkjon/98problems/master/public/img/screenshots/06_database_schema.png "Database Schema")
 

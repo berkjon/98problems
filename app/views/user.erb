@@ -1,0 +1,47 @@
+<link href="/css/dashboard.css" rel="stylesheet">
+
+<%= erb :_navbar, layout: false %>
+
+<div class="container-fluid">
+  <div class="row">
+    <%= erb :_sidebar, layout: false %>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Dashboard</h1>
+
+      <h2 class="sub-header">All Tags</h2>
+        <div class="row placeholders">
+          <div class="col-xs-7 col-sm-7 placeholder">
+            <div class="user-tags">
+              <% current_user.tags.each do |tag| %>
+                <%= erb :_tag_on_user, locals: {current_user: current_user, tag: tag} %>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-2 placeholder circle-border">
+            <div class="tag-filter-button">
+              <div class="supersize-text hvr-icon-fade">
+              </div>
+              <span class="text-muted">Click to Filter</span>
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-2 placeholder circle-border">
+            <div class="tag-export-button">
+              <div class="supersize-text hvr-icon-wobble-vertical">
+              </div>
+              <span class="text-muted">Export to New Spotify Playlist</span>
+            </div>
+          </div>
+        </div>
+
+
+      <h2 class="sub-header">Tracks</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <%= erb :_track_list, layout: false %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/tracks.js"></script>

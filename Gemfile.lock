@@ -111,6 +111,7 @@ DEPENDENCIES
   faker
   hirb
   httparty
+  json
   pg
   pry-byebug
   puma

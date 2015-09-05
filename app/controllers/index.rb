@@ -1,19 +1,25 @@
 get '/' do
-  url = "https://accounts.spotify.com/authorize?client_id=#{ENV['SPOTIFY_API_ID']}&response_type=code&redirect_uri=#{redirect_uri}&scope=user-read-email%20user-library-read%20user-follow-read%20user-follow-modify%20playlist-modify-public&state=#{ENV['STATE']}"
-  #full list of scopes at https://developer.spotify.com/web-api/using-scopes/
-  erb :index, locals: {url: url}
+  if logged_in_and_active_token?
+    redirect "/users/#{current_user.id}"
+  else
+    erb :index
+  end
 end
 
-get '/reauthorize' do
-  erb :reauthorize #reauthenticate user with Spotify if token timed out
+get '/users/:user_id' do
+  puts "attempt /users/user_id route"
+  if logged_in_and_active_token?
+    erb :user
+  else
+    redirect '/'
+  end
 end
 
 get '/oauth_callback' do
   puts "in oauth callback"
   if params[:state] == ENV['STATE']
-    if params[:code]
+    if params[:code] #if spotify sent an authorization code
       fetch_api_token(params[:code])
-      # binding.pry
       redirect '/'
     else
       puts "OAuth Error: #{params[:error]}"
@@ -23,3 +29,55 @@ get '/oauth_callback' do
   end
 end
 
+delete '/users/:user_id/tags/:tag_id/delete' do
+  Tag.find(params[:tag_id]).destroy_tag_everywhere
+  redirect "/users/#{params[:user_id]}" unless request.xhr?
+end
+
+post '/users/:user_id/tracks/:track_id/tags/add' do
+  if request.xhr? #because JS file already removes leading '#' sign and converts to lowercase
+    tag_string = params[:tag]
+  else
+    #move this to controller helper method?
+    params[:tag][0] == "#" ? tag_string = params[:tag][1..-1].downcase : tag_string = params[:tag].downcase
+  end
+  current_tag = current_user.tags.find_or_create_by(name: tag_string)
+  current_tag.link_to_usertrack(params[:track_id])
+  if request.xhr?
+    content_type :json
+    {user_id: params[:user_id], track_id: params[:track_id], tag_id: current_tag.id, tag_string: tag_string}.to_json
+    # erb :_tag_on_track, locals: {tag: tag}, layout: false
+  else
+    redirect "/users/#{params[:user_id]}"
+  end
+end
+
+delete '/users/:user_id/tracks/:track_id/tags/:tag_id/remove' do
+  usertrack_id = UserTrack.where(user_id: params[:user_id], track_id: params[:track_id]).first.id
+  TagUsertrack.where(tag_id: params[:tag_id], user_track_id:usertrack_id).first.destroy
+  redirect "/users/#{params[:user_id]}" unless request.xhr?
+end
+
+get '/users/:user_id/filter' do
+  tag_ids = JSON.parse(params[:tag_ids])
+  erb :_selected_tracks, locals: {tag_ids: tag_ids}, layout: false
+end
+
+post '/users/:user_id/export_to_spotify' do
+  puts "HIT EXPORT ROUTE"
+  tag_ids = JSON.parse(params[:tag_ids])
+  track_ids = JSON.parse(params[:track_ids])
+  playlist_id = create_spotify_playlist(tag_ids)
+  add_songs_to_playlist(playlist_id, track_ids)
+end
+
+
+get '/clear_session' do
+  session.clear
+  redirect '/'
+end
+
+get '/logout' do
+  logout!
+  redirect '/'
+end

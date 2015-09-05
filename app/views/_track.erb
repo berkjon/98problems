@@ -1,0 +1,16 @@
+<tr class="track" data-user-id="<%= current_user.id %>" data-track-id="<%= track.id %>">
+  <td><%= track.title %></td>
+  <td><%= track.artist %></td>
+  <td><%= track.album %></td>
+  <td class="tags"><% track.tags(current_user.id).each do |tag| %>
+    <%= erb :_tag_on_track, locals: {current_user: current_user, track: track, tag: tag}, layout: false %>
+  <% end %></td>
+  <td>
+    <form class="add-tag-form" class="form-inline" action="/users/<%= current_user.id %>/tracks/<%= track.id %>/tags/add" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control input-sm" name="tag" placeholder="Enter tag here" required>
+      </div>
+    </form>
+  </td>
+</tr>
+

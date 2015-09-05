@@ -1,0 +1,14 @@
+<thead>
+  <tr>
+    <th>Title</th>
+    <th>Artist</th>
+    <th>Album</th>
+    <th>Tags</th>
+    <th>Add Tag</th>
+  </tr>
+</thead>
+<tbody>
+  <% current_user.tracks.each do |track| %>
+    <%= erb :_track, locals: {track: track}, layout: false %>
+  <% end %>
+</tbody>

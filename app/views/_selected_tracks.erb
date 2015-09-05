@@ -1,0 +1,3 @@
+  <% current_user.matching_tracks(tag_ids).each do |track| %>
+    <%= erb :_track, locals: {track: track}, layout: false %>
+  <% end %>
